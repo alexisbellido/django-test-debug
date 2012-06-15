@@ -1,0 +1,13 @@
+local_settings.py
+
+*.pyc
+*.pyo
+
+*.swp
+*.swo
+
+build/*
+*.egg-info
+*.~lock*
+
+static/admin
