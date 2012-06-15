@@ -1,1 +1,12 @@
 Market Research project for the Django 1.1 Testing and Debugging book.
+
+Django setup created on Ubuntu 11.10 with the following commands:
+
+mkvirtualenv django-test-debug
+pip install Django==1.4
+pip install psycopg2
+pip install ipython
+pip install yolk
+pip install docutils
+pip install South
+pip install Fabric
