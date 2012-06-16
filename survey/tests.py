@@ -14,3 +14,11 @@ class SimpleTest(TestCase):
         Tests that 1 + 1 always equals 2.
         """
         self.assertEqual(1 + 1, 2)
+
+__test__ = {"doctest": """
+Another way to test 1+1 = 2
+
+>>> 1 +1 == 2
+True
+
+"""}
