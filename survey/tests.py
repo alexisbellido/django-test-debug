@@ -8,13 +8,22 @@ class SurveySaveTest(TestCase):
     sd = datetime.date(2009, 12, 28)
 
     def testClosesAutoset(self):
-        pass
+        """Tests for the Survey override method"""
+        s = Survey.objects.create(title=self.t, opens=self.sd)
+        self.assertEqual(s.closes, datetime.date(2010, 1, 4),
+            "closes not autoset to 7 days after opens, expected %s but got %s" % (datetime.date(2010, 1, 4), s.closes))
 
     def testClosesHonored(self):
-        pass
+        """Verify closes is autoset correctly"""
+        s = Survey.objects.create(title=self.t, opens=self.sd, closes=self.sd)
+        self.assertEqual(s.closes, self.sd)
 
     def testClosesReset(self):
-        pass
+        """Verify closes is honored if specified"""
+        s = Survey.objects.create(title=self.t, opens=self.sd)
+        s.closes = None
+        self.assertRaises(IntegrityError, s.save)
 
     def testTitleOnly(self):
-        pass
+        """Verify closes is only autoset during initial create"""
+        self.assertRaises(IntegrityError, Survey.objects.create, title=self.t)
