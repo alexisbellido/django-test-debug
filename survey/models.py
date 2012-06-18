@@ -16,6 +16,9 @@ class Question(models.Model):
     question = models.CharField(max_length=200)
     survey = models.ForeignKey(Survey)
 
+    def __unicode__(self):
+        return u'%s: %s' % (self.survey, self.question)
+
 class Answer(models.Model):
     answer = models.CharField(max_length=200)
     question = models.ForeignKey(Question)
