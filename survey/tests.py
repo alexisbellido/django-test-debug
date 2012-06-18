@@ -1,7 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.db import IntegrityError
-from survey.models import Survey
+from survey.models import Survey, Question
 
 class SurveySaveTest(TestCase):
     t = "New Year's Resolutions"
@@ -27,3 +27,35 @@ class SurveySaveTest(TestCase):
     def testTitleOnly(self):
         """Verify closes is only autoset during initial create"""
         self.assertRaises(IntegrityError, Survey.objects.create, title=self.t)
+
+class QuestionWinningAnswersTest(TestCase):
+
+    fixtures = ['test_winning_answers.json']
+
+    def testClearWinner(self):
+        q = Question.objects.get(question='Clear Winner')
+        wa_qs = q.winning_answers()
+        self.assertEqual(wa_qs.count(), 1)
+        winner = wa_qs[0]
+        self.assertEqual(winner.answer, 'Max Votes')
+
+    def testTwoWayTie(self):
+        q = Question.objects.get(question='2-Way Tie')
+        wa_qs = q.winning_answers()
+        self.assertEqual(wa_qs.count(), 2)
+        for winner in wa_qs:
+            self.assertTrue(winner.answer.startswith('Max Votes'))
+
+    def testNoResponses(self):
+        q = Question.objects.get(question='No Responses')
+        wa_qs = q.winning_answers()
+        #self.assertEqual(wa_qs.count(), 1)
+        #winner = wa_qs[0]
+        #self.assertEqual(winner.answer, 'Max Votes')
+
+    def testNoAnswers(self):
+        q = Question.objects.get(question='No Answers')
+        wa_qs = q.winning_answers()
+        #self.assertEqual(wa_qs.count(), 1)
+        #winner = wa_qs[0]
+        #self.assertEqual(winner.answer, 'Max Votes')

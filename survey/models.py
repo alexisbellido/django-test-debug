@@ -33,3 +33,6 @@ class Answer(models.Model):
     answer = models.CharField(max_length=200)
     question = models.ForeignKey(Question)
     votes = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.answer
