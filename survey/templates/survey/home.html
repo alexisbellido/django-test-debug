@@ -1,0 +1,36 @@
+{% extends "survey/base.html" %}
+
+{% block title %}The New Survey Central{% endblock %}
+
+{% block content %}
+
+<h1>Welcome to Survey Central</h1>
+
+{% if active_surveys %}
+<p>Take a survey now!</p>
+<ul>
+{% for survey in active_surveys %}
+  <li><a href="">{{ survey.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if completed_surveys %}
+<p>See how your opinions compared to those of others!</p>
+<ul>
+{% for survey in completed_surveys %}
+  <li><a href="">{{ survey.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if upcoming_surveys %}
+<p>Come back soon to share your opinion!</p>
+<ul>
+{% for survey in upcoming_surveys %}
+  <li>{{ survey.title }} opens {{ survey.opens }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}
