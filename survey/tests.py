@@ -49,13 +49,23 @@ class QuestionWinningAnswersTest(TestCase):
     def testNoResponses(self):
         q = Question.objects.get(question='No Responses')
         wa_qs = q.winning_answers()
-        #self.assertEqual(wa_qs.count(), 1)
-        #winner = wa_qs[0]
-        #self.assertEqual(winner.answer, 'Max Votes')
+        self.assertEqual(wa_qs.count(), 0)
 
     def testNoAnswers(self):
         q = Question.objects.get(question='No Answers')
         wa_qs = q.winning_answers()
-        #self.assertEqual(wa_qs.count(), 1)
-        #winner = wa_qs[0]
-        #self.assertEqual(winner.answer, 'Max Votes')
+        self.assertEqual(wa_qs.count(), 0)
+
+class SurveyManagerTest(TestCase):
+    def setUp(self):
+        today = datetime.date.today()
+        oneday = datetime.timedelta(1)
+        yesterday = today - oneday
+        tomorrow = today + oneday
+        Survey.objects.all().delete()
+        Survey.objects.create(title="Yesterday", opens=yesterday, closes=yesterday)
+        Survey.objects.create(title="Today", opens=today, closes=today)
+        Survey.objects.create(title="Tomorrow", opens=tomorrow, closes=tomorrow)
+
+    def testOne(self):
+        self.assertEqual(1+1, 2)
