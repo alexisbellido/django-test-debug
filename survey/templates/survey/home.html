@@ -10,7 +10,7 @@
 <p>Take a survey now!</p>
 <ul>
 {% for survey in active_surveys %}
-  <li><a href="">{{ survey.title }}</a></li>
+  <li><a href="{{ survey.get_absolute_url }}">{{ survey.title }}</a></li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -19,7 +19,7 @@
 <p>See how your opinions compared to those of others!</p>
 <ul>
 {% for survey in completed_surveys %}
-  <li><a href="">{{ survey.title }}</a></li>
+  <li><a href="{{ survey.get_absolute_url }}">{{ survey.title }}</a></li>
 {% endfor %}
 </ul>
 {% endif %}

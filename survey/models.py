@@ -1,10 +1,12 @@
 import datetime
 from django.db import models
 from django.db.models import Max
+#from django.core.urlresolvers import reverse
 
 class ShellTests(object):
     """ Manual setup of the database from the shell """
     def setUp(self):
+        # three surveys for yesterday, today and tomorrow
         today = datetime.date.today()
         oneday = datetime.timedelta(1)
         yesterday = today - oneday
@@ -14,8 +16,32 @@ class ShellTests(object):
         Survey.objects.create(title="Today", opens=today, closes=today)
         Survey.objects.create(title="Tomorrow", opens=tomorrow, closes=tomorrow)
 
+        # the survey for winning answers test
         from django.core.management import call_command
         call_command("loaddata", "survey/fixtures/test_winning_answers.json")
+
+        # the surveys for the home view
+        today = datetime.date.today()
+
+        d = today - datetime.timedelta(15)
+        Survey.objects.create(title="Too Old", opens=d, closes=d)
+
+        d += datetime.timedelta(1)
+        Survey.objects.create(title="Completed 1", opens=d, closes=d)
+
+        d = today - datetime.timedelta(1)
+        Survey.objects.create(title="Completed 2", opens=d, closes=d)
+        Survey.objects.create(title="Active 1", opens=d)
+        Survey.objects.create(title="Active 2", opens=today)
+
+        d = today + datetime.timedelta(1)
+        Survey.objects.create(title="Upcoming 1", opens=d)
+
+        d += datetime.timedelta(6)
+        Survey.objects.create(title="Upcoming 2", opens=d)
+
+        d += datetime.timedelta(1)
+        Survey.objects.create(title="Too Far Out", opens=d)
 
 class SurveyManager(models.Manager):
     def completed(self):
@@ -41,6 +67,16 @@ class Survey(models.Model):
 
     def __unicode__(self):
         return '%s' % self.title
+
+    @models.permalink
+    def get_absolute_url(self):
+        # see https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.permalink
+        # the permalink decorator is a high-level wrapper for reverse, which would be used like this:
+        #return reverse('survey_detail', args= (self.pk,))
+        # using a permalink for a URLconf entry with keyword arguments
+        #return ('znb_blog_category_detail', (), {'slug': self.slug})
+        # using a permalink for a URLconf entry with position arguments
+        return ('survey_detail', (self.pk,))
 
 class Question(models.Model):
     question = models.CharField(max_length=200)
