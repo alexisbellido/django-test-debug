@@ -1,6 +1,7 @@
 import datetime
 from django.test import TestCase
 from survey.models import Survey
+from django.core.urlresolvers import reverse
 
 class SurveyTest(TestCase):
     def setUp(self):
@@ -30,7 +31,6 @@ class SurveyTest(TestCase):
 
 class SurveyHomeTest(SurveyTest):
     def testHome(self):
-        from django.core.urlresolvers import reverse
         response = self.client.get(reverse('survey_home'))
         #self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Completed", count=2)
@@ -40,7 +40,6 @@ class SurveyHomeTest(SurveyTest):
         self.assertNotContains(response, "Too Far Out")
 
     def testHomeContext(self):
-        from django.core.urlresolvers import reverse
         response = self.client.get(reverse('survey_home'))
 
         self.assertNotContains(response, "Too Old")
@@ -60,7 +59,16 @@ class SurveyHomeTest(SurveyTest):
 
 class SurveyDetailTest(SurveyTest):
     def testUpcoming(self):
-        from django.core.urlresolvers import reverse
         survey = Survey.objects.get(title='Upcoming 1')
         response = self.client.get(reverse('survey_detail', args=(survey.pk,)))
         self.assertEqual(response.status_code, 404)
+
+    def testCompleted(self):
+        survey = Survey.objects.get(title='Too Old')
+        response = self.client.get(reverse('survey_detail', args=(survey.pk,)))
+        self.assertTemplateUsed(response, 'survey/completed_survey.html')
+
+    def testActive(self):
+        survey = Survey.objects.get(title='Active 1')
+        response = self.client.get(reverse('survey_detail', args=(survey.pk,)))
+        self.assertTemplateUsed(response, 'survey/active_survey.html')
