@@ -1,6 +1,7 @@
 from django.http import HttpResponse
+from django.http import Http404
 import datetime
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from survey.models import Survey
 
 def home(request):
@@ -17,4 +18,21 @@ def home(request):
             })
 
 def survey_detail(request, pk):
-    return HttpResponse("This is the survey detail page for survey with pk=%s" % pk)
+    survey = get_object_or_404(Survey, pk=pk)
+    today = datetime.date.today()
+    if survey.closes < today:
+        #return HttpResponse('completed survey %s %s' % (survey.title, pk))
+        return display_completed_survey(request, survey)
+    elif survey.opens > today:
+        raise Http404
+    else:
+        #return HttpResponse('active survey %s %s' % (survey.title, pk))
+        return display_active_survey(request, survey)
+
+def display_completed_survey(request, survey):
+    return render_to_response('survey/completed_survey.html',
+                              {'survey': survey})
+
+def display_active_survey(request, survey):
+    return render_to_response('survey/active_survey.html',
+                              {'survey': survey})

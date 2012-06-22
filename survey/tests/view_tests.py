@@ -2,7 +2,7 @@ import datetime
 from django.test import TestCase
 from survey.models import Survey
 
-class SurveyHomeTest(TestCase):
+class SurveyTest(TestCase):
     def setUp(self):
         today = datetime.date.today()
         Survey.objects.all().delete()
@@ -27,6 +27,8 @@ class SurveyHomeTest(TestCase):
         d += datetime.timedelta(1)
         Survey.objects.create(title="Too Far Out", opens=d)
 
+
+class SurveyHomeTest(SurveyTest):
     def testHome(self):
         from django.core.urlresolvers import reverse
         response = self.client.get(reverse('survey_home'))
@@ -37,5 +39,28 @@ class SurveyHomeTest(TestCase):
         self.assertNotContains(response, "Too Old")
         self.assertNotContains(response, "Too Far Out")
 
+    def testHomeContext(self):
+        from django.core.urlresolvers import reverse
+        response = self.client.get(reverse('survey_home'))
+
+        self.assertNotContains(response, "Too Old")
+        self.assertNotContains(response, "Too Far Out")
+
+        context_vars = ['completed_surveys', 'active_surveys', 'upcoming_surveys']
+        title_starts = ['Completed', 'Active', 'Upcoming']
+
+        for context_var, title_start in zip(context_vars, title_starts):
+            surveys = response.context[context_var]
+            self.assertEqual(len(surveys), 2, "Expected 2 %s, found %d instead" % (context_var, len(surveys)))
+            for survey in surveys:
+                self.assertTrue(survey.title.startswith(title_start), "%s title %s does not start with %s" % (context_var, survey.title, title_start))
+
     #def testOne(self):
     #    self.assertEqual(1, 1)
+
+class SurveyDetailTest(SurveyTest):
+    def testUpcoming(self):
+        from django.core.urlresolvers import reverse
+        survey = Survey.objects.get(title='Upcoming 1')
+        response = self.client.get(reverse('survey_detail', args=(survey.pk,)))
+        self.assertEqual(response.status_code, 404)
