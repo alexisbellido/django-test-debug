@@ -4,7 +4,12 @@ from django.db.models import Max
 #from django.core.urlresolvers import reverse
 
 class ShellTests(object):
-    """ Manual setup of the database from the shell """
+    """
+    Manual setup of the database from the shell, recreate data like this:
+    from survey.models import ShellTests
+    s = ShellTests()
+    s.setUp()
+    """
     def setUp(self):
         # three surveys for yesterday, today and tomorrow
         today = datetime.date.today()
