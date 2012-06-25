@@ -3,6 +3,7 @@ from django.http import Http404
 import datetime
 from django.shortcuts import render_to_response, get_object_or_404
 from survey.models import Survey
+from survey.forms import QuestionVoteForm
 
 def home(request):
     #return HttpResponse("This is the home page. w00t!")
@@ -34,5 +35,6 @@ def display_completed_survey(request, survey):
                               {'survey': survey})
 
 def display_active_survey(request, survey):
+    qvf = QuestionVoteForm(survey.question_set.all()[0])
     return render_to_response('survey/active_survey.html',
-                              {'survey': survey})
+                              {'survey': survey, 'qvf': qvf})

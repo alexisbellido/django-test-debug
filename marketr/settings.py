@@ -1,6 +1,6 @@
 # Django settings for marketr project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -156,4 +156,7 @@ LOGGING = {
     }
 }
 
+# I think we need Debug = False for this to work. Test it with missing 404.html template.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# This will only work for internal broken links
+#SEND_BROKEN_LINK_EMAILS = True

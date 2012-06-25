@@ -21,6 +21,15 @@ class ShellTests(object):
         Survey.objects.create(title="Today", opens=today, closes=today)
         Survey.objects.create(title="Tomorrow", opens=tomorrow, closes=tomorrow)
 
+        # survey for Television Trends, Chapter 7
+        s = Survey.objects.create(title="Television Trends", opens=today, closes=tomorrow)
+        q = Question(question='What is your favorite TV show?', survey = s)
+        q.save()
+        s.save()
+        Answer.objects.create(answer='Comedy',question=q)
+        Answer.objects.create(answer='Drama',question=q)
+        Answer.objects.create(answer='Reality',question=q)
+
         # the survey for winning answers test
         from django.core.management import call_command
         call_command("loaddata", "survey/fixtures/test_winning_answers.json")
