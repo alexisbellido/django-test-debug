@@ -24,7 +24,7 @@ def survey_detail(request, pk):
         #return HttpResponse('completed survey %s %s' % (survey.title, pk))
         return display_completed_survey(request, survey)
     elif survey.opens > today:
-        raise Http404
+        raise Http404("%s does not open until %s; it is only %s" % (survey.title, survey.opens, today))
     else:
         #return HttpResponse('active survey %s %s' % (survey.title, pk))
         return display_active_survey(request, survey)

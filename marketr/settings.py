@@ -1,10 +1,11 @@
 # Django settings for marketr project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('Alexis Bellido', 'alexis@ventanazul.com'),
 )
 
 MANAGERS = ADMINS
@@ -154,3 +155,5 @@ LOGGING = {
         },
     }
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
