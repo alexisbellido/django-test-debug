@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.template import RequestContext
 from django.http import Http404
 import datetime
 from django.shortcuts import render_to_response, get_object_or_404
@@ -35,10 +38,30 @@ def display_completed_survey(request, survey):
                               {'survey': survey})
 
 def display_active_survey(request, survey):
+    if request.method == 'POST':
+        data = request.POST
+    else:
+        data = None
+
     qforms = []
     for i, q in enumerate(survey.question_set.all()):
         if q.answer_set.count() > 1:
-            qforms.append(QuestionVoteForm(q, prefix=1))
+            qforms.append(QuestionVoteForm(q, prefix=i, data=data))
+
+    if request.method == 'POST':
+        chosen_answers = []
+        for qf in qforms:
+            if not qf.is_valid():
+                break
+            chosen_answers.append(qf.cleaned_data['answer'])
+        else:
+            for answer in chosen_answers:
+                answer.votes += 1
+                answer.save()
+            return HttpResponseRedirect(reverse('survey_home'))
+            #return HttpResponseRedirect(reverse('survey_thanks', args=(survey.pk,)))
 
     return render_to_response('survey/active_survey.html',
-                              {'survey': survey, 'qforms': qforms})
+                              {'survey': survey, 'qforms': qforms},
+                              context_instance = RequestContext(request),
+                             )

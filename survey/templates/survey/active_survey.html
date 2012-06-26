@@ -11,6 +11,7 @@
 {% for qform in qforms %}
   {{ qform.as_p }}
 {% endfor %}
+{% csrf_token %}
 <button type="submit">Submit</button>
 </div>
 </form>
