@@ -8,7 +8,9 @@
 
 <form method="post" action=".">
 <div>
-{{ qvf.as_p }}
+{% for qform in qforms %}
+  {{ qform.as_p }}
+{% endfor %}
 <button type="submit">Submit</button>
 </div>
 </form>

@@ -35,6 +35,10 @@ def display_completed_survey(request, survey):
                               {'survey': survey})
 
 def display_active_survey(request, survey):
-    qvf = QuestionVoteForm(survey.question_set.all()[0])
+    qforms = []
+    for i, q in enumerate(survey.question_set.all()):
+        if q.answer_set.count() > 1:
+            qforms.append(QuestionVoteForm(q, prefix=1))
+
     return render_to_response('survey/active_survey.html',
-                              {'survey': survey, 'qvf': qvf})
+                              {'survey': survey, 'qforms': qforms})
