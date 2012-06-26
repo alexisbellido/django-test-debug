@@ -6,4 +6,11 @@
 
 <h1>Survey questions for {{ survey.title }}</h1>
 
+<form method="post" action=".">
+<div>
+{{ qvf.as_p }}
+<button type="submit">Submit</button>
+</div>
+</form>
+
 {% endblock %}

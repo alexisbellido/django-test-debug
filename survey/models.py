@@ -23,12 +23,17 @@ class ShellTests(object):
 
         # survey for Television Trends, Chapter 7
         s = Survey.objects.create(title="Television Trends", opens=today, closes=tomorrow)
-        q = Question(question='What is your favorite TV show?', survey = s)
-        q.save()
+        q1 = Question(question='What is your favorite TV show?', survey = s)
+        q1.save()
+        q2 = Question(question='How many new shows will you try this Fall?', survey = s)
+        q2.save()
         s.save()
-        Answer.objects.create(answer='Comedy',question=q)
-        Answer.objects.create(answer='Drama',question=q)
-        Answer.objects.create(answer='Reality',question=q)
+        Answer.objects.create(answer='Comedy',question=q1)
+        Answer.objects.create(answer='Drama',question=q1)
+        Answer.objects.create(answer='Reality',question=q1)
+        Answer.objects.create(answer='Hardly any: I already watch too much TV!',question=q2)
+        Answer.objects.create(answer='Maybe 3-5',question=q2)
+        Answer.objects.create(answer='I am a TV fiend, I will try them all at least once!',question=q2)
 
         # the survey for winning answers test
         from django.core.management import call_command
