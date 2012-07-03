@@ -9,7 +9,9 @@
 <form method="post" action=".">
 <div>
 {% for qform in qforms %}
-  {{ qform.as_p }}
+  {{ qform.answer.label }}
+  {{ qform.answer.errors }}
+  {{ qform.answer }}
 {% endfor %}
 {% csrf_token %}
 <button type="submit">Submit</button>

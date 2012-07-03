@@ -21,6 +21,11 @@ def home(request):
              'upcoming_surveys': upcoming,
             })
 
+def survey_thanks(request, pk):
+    survey = get_object_or_404(Survey, pk=pk)
+    return render_to_response('survey/thanks.html',
+                              {'survey': survey})
+
 def survey_detail(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
     today = datetime.date.today()
@@ -58,8 +63,8 @@ def display_active_survey(request, survey):
             for answer in chosen_answers:
                 answer.votes += 1
                 answer.save()
-            return HttpResponseRedirect(reverse('survey_home'))
-            #return HttpResponseRedirect(reverse('survey_thanks', args=(survey.pk,)))
+            #return HttpResponseRedirect(reverse('survey_home'))
+            return HttpResponseRedirect(reverse('survey_thanks', args=(survey.pk,)))
 
     return render_to_response('survey/active_survey.html',
                               {'survey': survey, 'qforms': qforms},
