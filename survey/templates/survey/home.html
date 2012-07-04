@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
 <h1>Welcome to Survey Central</h1>
 
 {% if active_surveys %}
@@ -32,5 +33,10 @@
 {% endfor %}
 </ul>
 {% endif %}
+
+{{ sql_queries|length }} queries
+{% for qdict in sql_queries %}
+<p>{{ qdict.sql }} ({{ qdict.time }} seconds)
+{% endfor %}
 
 {% endblock %}

@@ -160,3 +160,5 @@ LOGGING = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # This will only work for internal broken links
 #SEND_BROKEN_LINK_EMAILS = True
+
+INTERNAL_IPS =  ('192.168.0.43',)

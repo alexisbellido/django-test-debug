@@ -18,13 +18,16 @@ def home(request):
     return render_to_response('survey/home.html',
             {'active_surveys': active,
              'completed_surveys': completed,
-             'upcoming_surveys': upcoming,
-            })
+             'upcoming_surveys': upcoming},
+            RequestContext(request)
+            )
 
 def survey_thanks(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
     return render_to_response('survey/thanks.html',
-                              {'survey': survey})
+                              {'survey': survey},
+                              RequestContext(request)
+                              )
 
 def survey_detail(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
@@ -40,7 +43,9 @@ def survey_detail(request, pk):
 
 def display_completed_survey(request, survey):
     return render_to_response('survey/completed_survey.html',
-                              {'survey': survey})
+                              {'survey': survey},
+                              RequestContext(request)
+                              )
 
 def display_active_survey(request, survey):
     if request.method == 'POST':
