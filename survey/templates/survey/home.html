@@ -34,9 +34,4 @@
 </ul>
 {% endif %}
 
-{{ sql_queries|length }} queries
-{% for qdict in sql_queries %}
-<p>{{ qdict.sql }} ({{ qdict.time }} seconds)
-{% endfor %}
-
 {% endblock %}

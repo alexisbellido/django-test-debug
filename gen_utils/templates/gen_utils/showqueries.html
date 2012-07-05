@@ -1,0 +1,9 @@
+{% if sql_queries %}
+
+{{ sql_queries|length }} queries
+{% load gentags %}
+{% for qdict in sql_queries %}
+<p>{{ qdict.sql|replace_dashes }} ({{ qdict.time }} seconds)
+{% endfor %}
+
+{% endif %}
