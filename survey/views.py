@@ -7,6 +7,7 @@ import datetime
 from django.shortcuts import render_to_response, get_object_or_404
 from survey.models import Survey
 from survey.forms import QuestionVoteForm
+import logging
 
 def home(request):
     #return HttpResponse("This is the home page. w00t!")
@@ -48,6 +49,7 @@ def display_completed_survey(request, survey):
                               )
 
 def display_active_survey(request, survey):
+    logging.debug('display_active_survey called for a %s of survey witk pk %s', request.method, survey.pk)
     if request.method == 'POST':
         data = request.POST
     else:
@@ -67,7 +69,7 @@ def display_active_survey(request, survey):
         else:
             for answer in chosen_answers:
                 answer.votes += 1
-                answer.save()
+                answer.save(force_update=True)
             #return HttpResponseRedirect(reverse('survey_home'))
             return HttpResponseRedirect(reverse('survey_thanks', args=(survey.pk,)))
 
