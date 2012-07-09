@@ -7,8 +7,10 @@ import datetime
 from django.shortcuts import render_to_response, get_object_or_404
 from survey.models import Survey
 from survey.forms import QuestionVoteForm
+from gen_utils.logutils import log_view, log_call
 import logging
 
+@log_view
 def home(request):
     #return HttpResponse("This is the home page. w00t!")
     today = datetime.date.today()
@@ -23,6 +25,7 @@ def home(request):
             RequestContext(request)
             )
 
+@log_view
 def survey_thanks(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
     return render_to_response('survey/thanks.html',
@@ -30,6 +33,7 @@ def survey_thanks(request, pk):
                               RequestContext(request)
                               )
 
+@log_view
 def survey_detail(request, pk):
     survey = get_object_or_404(Survey, pk=pk)
     today = datetime.date.today()
@@ -42,14 +46,15 @@ def survey_detail(request, pk):
         #return HttpResponse('active survey %s %s' % (survey.title, pk))
         return display_active_survey(request, survey)
 
+@log_call
 def display_completed_survey(request, survey):
     return render_to_response('survey/completed_survey.html',
                               {'survey': survey},
                               RequestContext(request)
                               )
 
+@log_call
 def display_active_survey(request, survey):
-    logging.debug('display_active_survey called for a %s of survey witk pk %s', request.method, survey.pk)
     if request.method == 'POST':
         data = request.POST
     else:
@@ -64,6 +69,7 @@ def display_active_survey(request, survey):
         chosen_answers = []
         for qf in qforms:
             if not qf.is_valid():
+                logging.debug("form failed validation: %r", qf.errors)
                 break
             chosen_answers.append(qf.cleaned_data['answer'])
         else:
