@@ -9,6 +9,7 @@ from survey.models import Survey
 from survey.forms import QuestionVoteForm
 from gen_utils.logutils import log_view, log_call
 import logging
+from django.db.models import F
 
 @log_view
 def home(request):
@@ -74,7 +75,7 @@ def display_active_survey(request, survey):
             chosen_answers.append(qf.cleaned_data['answer'])
         else:
             for answer in chosen_answers:
-                answer.votes += 1
+                answer.votes = F('votes') + 1
                 answer.save(force_update=True)
             #return HttpResponseRedirect(reverse('survey_home'))
             return HttpResponseRedirect(reverse('survey_thanks', args=(survey.pk,)))
