@@ -101,6 +101,16 @@ class Question(models.Model):
     question = models.CharField(max_length=200)
     survey = models.ForeignKey(Survey)
 
+    def get_piechart_url(self):
+      from pygooglechart import PieChart3D
+      #import pdb
+      #pdb.set_trace()
+      answer_set = self.answer_set.all()
+      chart = PieChart3D(500, 230)
+      chart.add_data([a.votes for a in answer_set])
+      chart.set_pie_labels([a.answer for a in answer_set])
+      return chart.get_url()
+
     def winning_answers(self):
         max_votes = self.answer_set.aggregate(Max('votes')).values()[0]
         if max_votes and max_votes > 0:

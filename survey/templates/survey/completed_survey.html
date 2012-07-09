@@ -3,7 +3,21 @@
 {% block title %}A complete survey{% endblock %}
 
 {% block content %}
-<h1>Completed</h1>
-<p>{{ survey.title }}</p>
+<h1>Survey results for {{ survey.title }}</h1>
+
+{% for q in survey.question_set.all %}
+  {% with q.winning_answers as winners %}
+    {% if winners %}
+      <h2>{{ q.question }}</h2>
+      <p>Winner{{ winners|length|pluralize }}:</p>
+        <ul>
+          {% for answer in winners %}
+            <li>{{ answer.answer }}</li>
+          {% endfor %}
+        </ul>
+        <p><img src="{{ q.get_piechart_url }}" alt="Pie Chart"></p>
+    {% endif %}
+  {% endwith %}
+{% endfor %}
 
 {% endblock %}
